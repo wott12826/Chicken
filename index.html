@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Shop</title>
+  <style>
+    :root {
+      --vh: 1vh;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: white;
+      height: 100%;
+    }
+
+    .container {
+      height: calc(var(--vh, 1vh) * 100);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .sound-image {
+      max-width: 50%;
+      height: auto;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .buy-button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .buy-button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Картинка со звуком -->
+    <img
+      src="images\brown-hen-isolated-white-studio-shot_136670-2844 copy.png"
+      alt="Product"
+      class="sound-image"
+      onclick="playSound()"
+    />
+
+    <!-- Кнопка с переходом -->
+    <a href="https://example.com" class="buy-button">Buy</a>
+  </div>
+
+  <!-- Звук -->
+  <audio id="clickSound" src="media\original sound - chicken1472_1747736520_musicaldown.com.mp3" preload="auto"></audio>
+
+  <script>
+  function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+
+  function playSound() {
+    const sound = document.getElementById('clickSound');
+    sound.currentTime = 0;
+    sound.play();
+
+    // Остановить звук через 10 секунд
+    setTimeout(() => {
+      sound.pause();
+      sound.currentTime = 0;
+    }, 10000);
+  }
+</script>
+
+</body>
+</html>
