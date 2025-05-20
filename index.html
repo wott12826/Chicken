@@ -18,6 +18,7 @@
     }
 
     .container {
+      position: relative; /* важно для позиционирования кнопки */
       height: calc(var(--vh, 1vh) * 100);
       display: flex;
       flex-direction: column;
@@ -28,14 +29,18 @@
     }
 
     .sound-image {
-      max-width: 50%;
+      max-width: 50%; /* уменьшили размер */
       height: auto;
       border-radius: 12px;
       cursor: pointer;
     }
 
     .buy-button {
-      margin-top: 20px;
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin-top: 0;
       padding: 12px 24px;
       font-size: 18px;
       background-color: black;
@@ -43,6 +48,9 @@
       border: none;
       border-radius: 8px;
       text-decoration: none;
+      transition: top 0.2s, left 0.2s;
+      cursor: pointer;
+      user-select: none;
     }
 
     .buy-button:hover {
@@ -54,39 +62,108 @@
   <div class="container">
     <!-- Картинка со звуком -->
     <img
-      src="images\brown-hen-isolated-white-studio-shot_136670-2844 copy.png"
+      src="images/brown-hen-isolated-white-studio-shot_136670-2844 copy.png"
       alt="Product"
       class="sound-image"
       onclick="playSound()"
     />
 
     <!-- Кнопка с переходом -->
-    <a href="https://example.com" class="buy-button">Buy</a>
+    <a href="https://example.com" class="buy-button" id="buyButton">Buy</a>
   </div>
 
   <!-- Звук -->
-  <audio id="clickSound" src="media\original sound - chicken1472_1747736520_musicaldown.com.mp3" preload="auto"></audio>
+  <audio id="clickSound" src="media/original sound - chicken1472_1747736520_musicaldown.com.mp3" preload="auto"></audio>
 
   <script>
-  function setVH() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
-  setVH();
-  window.addEventListener('resize', setVH);
+    function setVH() {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    setVH();
+    window.addEventListener('resize', setVH);
 
-  function playSound() {
-    const sound = document.getElementById('clickSound');
-    sound.currentTime = 0;
-    sound.play();
-
-    // Остановить звук через 10 секунд
-    setTimeout(() => {
-      sound.pause();
+    function playSound() {
+      const sound = document.getElementById('clickSound');
       sound.currentTime = 0;
-    }, 2000);
-  }
-</script>
+      sound.play();
 
+      setTimeout(() => {
+        sound.pause();
+        sound.currentTime = 0;
+      }, 2000);
+    }
+
+    const button = document.getElementById('buyButton');
+    const container = document.querySelector('.container');
+
+    let escapeActive = true;
+    const escapeDuration = 5000; // 5 секунд убегания на десктопе
+    let mobileClickCount = 0;
+    const maxMobileClicks = 2; // после 2 кликов на мобиле перестанет убегать и перейдет по ссылке
+
+    // Функция для генерации случайной позиции кнопки в контейнере
+    function getRandomPosition() {
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+
+      const maxLeft = containerRect.width - buttonRect.width;
+      const maxTop = containerRect.height - buttonRect.height;
+
+      const left = Math.random() * maxLeft;
+      const top = Math.random() * maxTop;
+
+      return { left, top };
+    }
+
+    // Функция перемещения кнопки
+    function moveButton() {
+      if (!escapeActive) return;
+
+      const pos = getRandomPosition();
+      button.style.left = `${pos.left}px`;
+      button.style.top = `${pos.top}px`;
+      button.style.transform = 'translate(0, 0)';
+    }
+
+    // Десктоп: убегаем при наведении курсора
+    button.addEventListener('mousemove', () => {
+      if (window.matchMedia("(pointer: fine)").matches) { // проверка, что это не тачскрин
+        moveButton();
+      }
+    });
+
+    // Мобильные устройства: убегаем по клику несколько раз, потом переходим
+    button.addEventListener('click', (e) => {
+      if (!escapeActive) return; // если убегание закончено, стандартное поведение
+
+      if (window.matchMedia("(pointer: coarse)").matches) { // тачскрин
+        e.preventDefault(); // отменяем переход по ссылке, пока убегает кнопка
+
+        mobileClickCount++;
+        if (mobileClickCount < maxMobileClicks) {
+          moveButton();
+        } else {
+          escapeActive = false;
+          // возвращаем кнопку в центр перед переходом
+          button.style.left = '50%';
+          button.style.top = '70%';
+          button.style.transform = 'translate(-50%, -50%)';
+
+          // делаем переход по ссылке
+          window.location.href = button.href;
+        }
+      }
+    });
+
+    // Автоматически отключаем убегание через 5 секунд (на десктопе)
+    setTimeout(() => {
+      escapeActive = false;
+      button.style.left = '50%';
+      button.style.top = '70%';
+      button.style.transform = 'translate(-50%, -50%)';
+    }, escapeDuration);
+
+  </script>
 </body>
 </html>
