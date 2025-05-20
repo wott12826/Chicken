@@ -1,209 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple Shop</title>
-  <style>
-    :root {
-      --vh: 1vh;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Shop</title>
+    <style>
+      :root {
+        --vh: 1vh;
+      }
 
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background-color: white;
-      height: 100%;
-    }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: white;
+        height: 100%;
+      }
 
-    /* === Блок с картинками-ссылками === */
-    .image-links {
-      position: absolute;  /* или fixed, если нужно при скролле */
-      top: 10px;
-      width: 100%;
-      pointer-events: none; /* чтобы не перекрывать клики по основному контенту */
-    }
+      /* === Блок с картинками-ссылками === */
+      .image-links {
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        pointer-events: none;
+        z-index: 1000; /* добавили — теперь блок точно поверх */
+      }
 
-    .link {
-      position: absolute;
-      pointer-events: auto; /* вернуть возможность клика */
-    }
+      .link {
+        position: absolute;
+        pointer-events: auto;
+        z-index: 1001; /* поверх других, включая курицу */
+      }
 
-    .link img {
-      max-width: 80px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.2s;
-    }
+      .link img {
+        max-width: 80px;
+        height: auto;
+        border-radius: 8px;
+        transition: transform 0.2s;
+      }
 
-    .link:hover img {
-      transform: scale(1.1);
-    }
+      .link:hover img {
+        transform: scale(1.1);
+      }
 
-    .link.left {
-      left: 10px;
-    }
+      .link.left {
+        left: 10px;
+      }
 
-    .link.center {
-      left: 50%;
-      transform: translateX(-50%);
-    }
+      .link.center {
+        left: 50%;
+        transform: translateX(-50%);
+      }
 
-    .link.right {
-      right: 10px;
-    }
-    /* === /Блок с картинками-ссылками === */
+      .link.right {
+        right: 10px;
+      }
+      /* === /Блок с картинками-ссылками === */
 
+      .container {
+        position: relative;
+        height: calc(var(--vh, 1vh) * 100);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
 
-    .container {
-      position: relative;
-      height: calc(var(--vh, 1vh) * 100);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
+      .sound-image {
+        max-width: 50%;
+        height: auto;
+        border-radius: 12px;
+        cursor: pointer;
+      }
 
-    .sound-image {
-      max-width: 50%;
-      height: auto;
-      border-radius: 12px;
-      cursor: pointer;
-    }
+      .buy-button {
+        position: absolute;
+        top: 70%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 12px 24px;
+        font-size: 18px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: top 0.2s, left 0.2s;
+        cursor: pointer;
+        user-select: none;
+      }
 
-    .buy-button {
-      position: absolute;
-      top: 70%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 12px 24px;
-      font-size: 18px;
-      background-color: black;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: top 0.2s, left 0.2s;
-      cursor: pointer;
-      user-select: none;
-    }
+      .buy-button:hover {
+        background-color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Картинки-ссылки вверху -->
+    <div class="image-links">
+      <a
+        href="https://t.me/+lT_qYztW4Z80MWZi"
+        class="link left"
+        target="_blank"
+      >
+        <img src="images\telegram.256x216.png" alt="Left Link" />
+      </a>
+      <a
+        href="https://www.tiktok.com/@chicken1472"
+        class="link center"
+        target="_blank"
+      >
+        <img src="images\tiktok-svgrepo-com.png" alt="Center Link" />
+      </a>
+      <a
+        href="https://x.com/i/communities/1924800994199634089"
+        class="link right"
+        target="_blank"
+      >
+        <img
+          src="images\X-Twitter-Logo--Streamline-Logos.png"
+          alt="Right Link"
+        />
+      </a>
+    </div>
 
-    .buy-button:hover {
-      background-color: #333;
-    }
-  </style>
-</head>
-<body>
+    <div class="container">
+      <!-- Основная картинка со звуком -->
+      <img
+        src="images/brown-hen-isolated-white-studio-shot_136670-2844 copy.png"
+        alt="Product"
+        class="sound-image"
+        onclick="playSound()"
+      />
+      <!-- Убегающая кнопка -->
+      <a href="https://example.com" class="buy-button" id="buyButton">Buy</a>
+    </div>
 
-  <!-- Картинки-ссылки вверху -->
-  <div class="image-links">
-    <a href="https://t.me/+lT_qYztW4Z80MWZi" class="link left" target="_blank">
-      <img src="images\telegram.256x216.png" alt="Left Link">
-    </a>
-    <a href="https://www.tiktok.com/@chicken1472" class="link center" target="_blank">
-      <img src="images\tiktok-svgrepo-com.png" alt="Center Link">
-    </a>
-    <a href="https://x.com/i/communities/1924800994199634089" class="link right" target="_blank">
-      <img src="images\X-Twitter-Logo--Streamline-Logos.png" alt="Right Link">
-    </a>
-  </div>
+    <!-- Звук -->
+    <audio
+      id="clickSound"
+      src="media/original sound - chicken1472_1747736520_musicaldown.com.mp3"
+      preload="auto"
+    ></audio>
 
-  <div class="container">
-    <!-- Основная картинка со звуком -->
-    <img
-      src="images/brown-hen-isolated-white-studio-shot_136670-2844 copy.png"
-      alt="Product"
-      class="sound-image"
-      onclick="playSound()"
-    />
-    <!-- Убегающая кнопка -->
-    <a href="https://example.com" class="buy-button" id="buyButton">Buy</a>
-  </div>
+    <script>
+      // Установка единицы vh для мобильных браузеров
+      function setVH() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+      }
+      setVH();
+      window.addEventListener("resize", setVH);
 
-  <!-- Звук -->
-  <audio id="clickSound" src="media/original sound - chicken1472_1747736520_musicaldown.com.mp3" preload="auto"></audio>
-
-  <script>
-    // Установка единицы vh для мобильных браузеров
-    function setVH() {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    setVH();
-    window.addEventListener('resize', setVH);
-
-    function playSound() {
-      const sound = document.getElementById('clickSound');
-      sound.currentTime = 0;
-      sound.play();
-      setTimeout(() => {
-        sound.pause();
+      function playSound() {
+        const sound = document.getElementById("clickSound");
         sound.currentTime = 0;
-      }, 2000);
-    }
-
-    // Убегающая кнопка
-    const button = document.getElementById('buyButton');
-    const container = document.querySelector('.container');
-    let escapeActive = true;
-    const escapeDuration = 5000; // 5 секунд
-    let mobileClickCount = 0;
-    const maxMobileClicks = 2;
-
-    function getRandomPosition() {
-      const cRect = container.getBoundingClientRect();
-      const bRect = button.getBoundingClientRect();
-      const maxLeft = cRect.width - bRect.width;
-      const maxTop = cRect.height - bRect.height;
-      return {
-        left: Math.random() * maxLeft,
-        top:  Math.random() * maxTop
-      };
-    }
-
-    function moveButton() {
-      if (!escapeActive) return;
-      const pos = getRandomPosition();
-      button.style.left = `${pos.left}px`;
-      button.style.top = `${pos.top}px`;
-      button.style.transform = 'translate(0, 0)';
-    }
-
-    // Десктоп: убегаем при hover
-    button.addEventListener('mousemove', () => {
-      if (window.matchMedia("(pointer: fine)").matches) {
-        moveButton();
+        sound.play();
+        setTimeout(() => {
+          sound.pause();
+          sound.currentTime = 0;
+        }, 2000);
       }
-    });
 
-    // Мобильники: убегаем по клику, потом пускаем
-    button.addEventListener('click', (e) => {
-      if (!escapeActive) return;
-      if (window.matchMedia("(pointer: coarse)").matches) {
-        e.preventDefault();
-        mobileClickCount++;
-        if (mobileClickCount < maxMobileClicks) {
+      // Убегающая кнопка
+      const button = document.getElementById("buyButton");
+      const container = document.querySelector(".container");
+      let escapeActive = true;
+      const escapeDuration = 5000; // 5 секунд
+      let mobileClickCount = 0;
+      const maxMobileClicks = 2;
+
+      function getRandomPosition() {
+        const cRect = container.getBoundingClientRect();
+        const bRect = button.getBoundingClientRect();
+        const maxLeft = cRect.width - bRect.width;
+        const maxTop = cRect.height - bRect.height;
+        return {
+          left: Math.random() * maxLeft,
+          top: Math.random() * maxTop,
+        };
+      }
+
+      function moveButton() {
+        if (!escapeActive) return;
+        const pos = getRandomPosition();
+        button.style.left = `${pos.left}px`;
+        button.style.top = `${pos.top}px`;
+        button.style.transform = "translate(0, 0)";
+      }
+
+      // Десктоп: убегаем при hover
+      button.addEventListener("mousemove", () => {
+        if (window.matchMedia("(pointer: fine)").matches) {
           moveButton();
-        } else {
-          escapeActive = false;
-          button.style.left = '50%';
-          button.style.top = '70%';
-          button.style.transform = 'translate(-50%, -50%)';
-          window.location.href = button.href;
         }
-      }
-    });
+      });
 
-    // Автоотключение через 5 секунд
-    setTimeout(() => {
-      escapeActive = false;
-      button.style.left = '50%';
-      button.style.top = '70%';
-      button.style.transform = 'translate(-50%, -50%)';
-    }, escapeDuration);
-  </script>
-</body>
+      // Мобильники: убегаем по клику, потом пускаем
+      button.addEventListener("click", (e) => {
+        if (!escapeActive) return;
+        if (window.matchMedia("(pointer: coarse)").matches) {
+          e.preventDefault();
+          mobileClickCount++;
+          if (mobileClickCount < maxMobileClicks) {
+            moveButton();
+          } else {
+            escapeActive = false;
+            button.style.left = "50%";
+            button.style.top = "70%";
+            button.style.transform = "translate(-50%, -50%)";
+            window.location.href = button.href;
+          }
+        }
+      });
+
+      // Автоотключение через 5 секунд
+      setTimeout(() => {
+        escapeActive = false;
+        button.style.left = "50%";
+        button.style.top = "70%";
+        button.style.transform = "translate(-50%, -50%)";
+      }, escapeDuration);
+    </script>
+  </body>
 </html>
